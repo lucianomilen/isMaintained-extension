@@ -5,9 +5,7 @@
 'use strict';
 
 chrome.runtime.onInstalled.addListener(() => {
-    chrome.storage.sync.set({color: '#3aa757'}, () => {
-      console.log('The color is green.');
-    });
+
 
     chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
       chrome.declarativeContent.onPageChanged.addRules([{
@@ -19,3 +17,30 @@ chrome.runtime.onInstalled.addListener(() => {
       }]);
     });
   });
+
+
+function ensureSendMessage(tabId, message, callback){
+    chrome.tabs.sendMessage(tabId, {ping: true}, function(response){
+        if(response) {
+            chrome.tabs.sendMessage(tabId, message, callback);
+        } else {
+            chrome.tabs.executeScript(tabId, {file: "jquery-3.3.1.min.js"}, function(){
+            chrome.tabs.executeScript(tabId, {file: "app.js"}, function(){
+                chrome.tabs.sendMessage(tabId, message, callback);
+            });
+            });
+        }
+    });
+}
+
+chrome.tabs.query({url: "https://github.com/*"}, function(tabs) {
+    ensureSendMessage(tabs[0].id, {greeting: "hello"});
+});
+
+// chrome.tabs.query({url: "https://github.com/*"}, function(tabs) {
+//     console.log(tabs[0]);
+//     const data = {
+//         str: "dada"
+//     };
+//     chrome.tabs.sendMessage(tabs[0].id, data);
+// });

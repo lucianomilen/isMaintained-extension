@@ -3,11 +3,17 @@
     "version": "1.0",
     "description": "First try!",
     "manifest_version": 2,
-    "permissions": ["activeTab", "declarativeContent", "storage"],
+    "permissions": ["activeTab", "declarativeContent", "storage", "tabs", "https://github.com/*"],
  	"background": {
     	  "scripts": ["background.js"],
       	"persistent": false
     },
+  "content_scripts": [
+    {
+      "matches": ["https://github.com/*"],
+      "js": ["jquery-3.3.1.min.js", "app.js"]
+    }
+  ],
     "page_action": {
       "default_popup": "popup.html",
       "default_icon": {
