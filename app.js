@@ -1,38 +1,61 @@
-// let $ = jQuery;
+const div = document.createElement( 'div' );
+const vid = document.createElement('div');
 
-//set attributes for btnForm
+div.id = 'sideDiv';
 
-//set attributes for btn
-//"btn.removeAttribute( 'style' );
+vid.id = 'contentDiv';
 
-// chrome.tabs.query({ currentWindow: true, active: true }, (tabs) => {
-//     console.error(tabs[0]);
-    // document.getElementById("js-repo-pjax-container").innerHTML = JSON.stringify(tabs[0]);
-    // var newDiv = document.createElement('div'); // create new textarea
-    // newDiv.innerHTML = JSON.stringify(tabs[0]);
-    // var thatDiv = document.getElementsByClassName("js-repo-pjax-container")[0];
-    //
-    // thatDiv.appendChild(newDiv)
+const sideDivStyle = {
+    position: "fixed",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "40px",
+    height: "40px",
+    cursor: "pointer",
+    backgroundColor: "lightblue",
+    zIndex: "1000",
+    right: "0",
+    top: "50%",
+    borderTopLeftRadius: "155px",
+    borderBottomLeftRadius: "155px"
+}
 
+const ContentDivStyle = {
+    position: "fixed",
+    display: "none",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100px",
+    height: "100px",
+    backgroundColor: "lightgray",
+    zIndex: "1000",
+    right: "0",
+    top: "calc(50% - 30px)"
+}
 
+$(div).css(sideDivStyle);
+$(vid).css(ContentDivStyle);
 
-// });
-
-
-
-var div = document.createElement( 'div' );
-
-div.id = 'myDivId';
-div.style.position = 'relative';
-div.style.display = "inline-flex"
-div.style.width = '28px';
-div.style.height = '28px';
-div.style.backgroundColor = 'lightblue';
+$(div).click(() => {
+    if($(vid).is(":visible")){
+        $(div).text("<")
+        $(vid).css("display", "none")
+        $(div).css("right", "0")
+    }
+    else {
+        $(div).text(">")
+        $(div).css("right", "100px")
+        $(vid).css("display", "flex")    
+    }
+    
+})
 
 function handleMessage(request, sender, sendResponse) {
     console.log(request);
     $('.repohead h1').after(div)
-    $('#myDivId').text(request.greeting)
+    $('#sideDiv').text("<")
+    $(div).after(vid);
     return true;
 }
 

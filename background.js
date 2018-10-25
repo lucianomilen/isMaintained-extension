@@ -36,11 +36,3 @@ function ensureSendMessage(tabId, message, callback){
 chrome.tabs.query({url: "https://github.com/*"}, function(tabs) {
     ensureSendMessage(tabs[0].id, {greeting: "hello"});
 });
-
-// chrome.tabs.query({url: "https://github.com/*"}, function(tabs) {
-//     console.log(tabs[0]);
-//     const data = {
-//         str: "dada"
-//     };
-//     chrome.tabs.sendMessage(tabs[0].id, data);
-// });
