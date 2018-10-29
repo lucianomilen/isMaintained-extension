@@ -1,9 +1,14 @@
 const div = document.createElement( 'div' );
 const vid = document.createElement('div');
+const hook = document.createElement('div');
 
 div.id = 'sideDiv';
 
 vid.id = 'contentDiv';
+
+hook.id = 'hookDiv'
+
+
 
 const sideDivStyle = {
     position: "fixed",
@@ -56,6 +61,7 @@ function handleMessage(request, sender, sendResponse) {
     $('.repohead h1').after(div)
     $('#sideDiv').text("<")
     $(div).after(vid);
+    $(vid).text(`${request.name}: ${request.id}`);
     return true;
 }
 
