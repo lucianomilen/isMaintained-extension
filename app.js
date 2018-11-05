@@ -56,12 +56,33 @@ $(div).click(() => {
     
 })
 
+const config = {
+    apiKey: "AAAA5vjQHxs:APA91bHUflcKyy9kkLxu7Q--trmLWgp8mP6QAvuCpqM5ffEmkVKF6kSRRiKhz4bJENwFL2UvZHCaveWGH7gtHrA_3Gp03ztcOgiSoJeZ4pW06HeJttTbPEuL515_enXK25fSd2QpvTKW",
+    authDomain: "992016867099.firebaseapp.com",
+    databaseURL: "https://level-maintenance-plugin.firebaseio.com",
+    storageBucket: "level-maintenance-plugin.appspot.com",
+}
+
+firebase.initializeApp(config);
+//const database = firebase.database();
+
+
+
 function handleMessage(request, sender, sendResponse) {
     console.log(request);
+    const {full_name} = request;
+    const owner = full_name.split('/')[0];
+    const name = full_name.split('/')[1];
+
+    firebase.database().ref('/projects').once('value').then((res) => {
+            const result = (res.val()[`${owner}`][`${name}`]);
+            $(vid).text(`${request.name}: ${result.lma}`);
+        }
+    )
+
     $('.repohead h1').after(div)
     $('#sideDiv').text("<")
     $(div).after(vid);
-    $(vid).text(`${request.name}: ${request.id}`);
     return true;
 }
 

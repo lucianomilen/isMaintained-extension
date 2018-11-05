@@ -1,0 +1,16 @@
+.lateralDiv {
+    position: "fixed";
+    display: "block";
+    width: "40px";
+    height: "40px";
+    background-color: "lightblue";
+    z-index: "1000";
+    right: "0";
+    top: "50%";
+    -webkit-border-top-left-radius: "155px";
+    -webkit-border-bottom-left-radius: "155px";
+    -moz-border-radius-top-left: "155px";
+    -moz-border-radius-bottom-left: "155px";
+    border-top-left-radius: "155px";
+    border-bottom-left-radius: "155px"
+}
