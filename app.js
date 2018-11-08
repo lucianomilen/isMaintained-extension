@@ -1,4 +1,4 @@
-const div = document.createElement( 'div' )
+const div = document.createElement('div')
 const vid = document.createElement('div')
 const hook = document.createElement('div')
 
@@ -8,17 +8,16 @@ vid.id = 'contentDiv'
 
 hook.id = 'hookDiv'
 
-
-
 const sideDivStyle = {
     position: "fixed",
     display: "flex",
     alignItems: "center",
+    fontWeight: "bold",
     justifyContent: "center",
     width: "40px",
     height: "40px",
     cursor: "pointer",
-    backgroundColor: "lightblue",
+    backgroundColor: "lightgray",
     zIndex: "1000",
     right: "0",
     top: "50%",
@@ -33,32 +32,33 @@ const ContentDivStyle = {
     justifyContent: "center",
     width: "300px",
     height: "200px",
-    backgroundColor: "lightgray",
+    backgroundColor: "#ddd",
     zIndex: "1000",
     right: "0",
-    top: "calc(50% - 80px)"
+    top: "calc(50% - 80px)",
+    boxShadow: "0 0 1px 0px #4c4c4c"
 }
 
 const chartContainerStyle = {
-    width: '200px',
-    height: '200px'
+    width: '100%',
+    height: '100%'
 }
 
 $(div).css(sideDivStyle)
 $(vid).css(ContentDivStyle)
 
 $(div).click(() => {
-    if($(vid).is(":visible")){
-        $(div).text("<")
+    if ($(vid).is(":visible")) {
+        $(div).text("←")
         $(vid).css("display", "none")
         $(div).css("right", "0")
     }
     else {
-        $(div).text(">")
+        $(div).text("→")
         $(div).css("right", "300px")
-        $(vid).css("display", "flex")    
+        $(vid).css("display", "flex")
     }
-    
+
 })
 
 const config = {
@@ -68,44 +68,88 @@ const config = {
     storageBucket: "level-maintenance-plugin.appspot.com",
 }
 
-firebase.initializeApp(config);
+firebase.initializeApp(config)
+
+const gaugeTitleStyle = {
+    textAlign: 'center',
+    position: 'absolute',
+    top: 0
+}
+
+function setArrowBackground() {
+    if(value < 25) {
+        $(div).css("background-color", "#bf3500")
+    }
+    else if(value < 75) {
+        $(div).css("background-color", "#ceff00")
+    }
+    else {
+        $(div).css("background-color", "#00ff00")
+    }
+}
 
 
-function createChart(result) {
-    console.log(result)
+function createChart(result, repName) {
+    console.log(repName)
     let chartContainer = document.createElement('div')
     chartContainer.id = 'gauge'
     $(chartContainer).css(chartContainerStyle)
+    const title = document.createElement('p')
+    $(title).css(gaugeTitleStyle)
+    $(title).text(repName)
+    $(vid).append(title)
     $(vid).append(chartContainer)
 
-    console.log($('#gauge'))
 
     const g = new JustGage({
         id: "gauge",
         value: result.lma,
         min: 0,
         max: 100,
-        title: "LMA",
+        width: 300,
+        height: 200,
+        label: "Maintenance Activity",
+        labelMinFontSize: 14,
+        labelFontColor: "#000",
         decimals: 1,
-        levelColors: ["#ff000c", "#00ff0c"],
-    });
+
+        customSectors: {
+            percents: true,
+            ranges: [{
+                color: "#bf3500",
+                lo: 0,
+                hi: 24
+            }, {
+                color: "#ceff00",
+                lo: 25,
+                hi: 74
+            }, {
+                color: "#00ff00",
+                lo: 75,
+                hi: 100
+            }]
+        }
+    })
 }
 
 function handleMessage(request, sender, sendResponse) {
-    console.log(request);
-    const {full_name} = request;
-    const owner = full_name.split('/')[0];
-    const name = full_name.split('/')[1];
+    const {full_name} = request
+    const owner = full_name.split('/')[0]
+    const name = full_name.split('/')[1]
 
     firebase.database().ref('/projects').once('value').then((res) => {
-            const result = (res.val()[`${owner}`][`${name}`]);
-            $(vid).text(`${request.name}`);
-            createChart(result)
+            const projectOwner = res.val()[`${owner}`]
+            if (projectOwner) {
+                const result = (projectOwner[`${name}`])
+                setArrowBackground(result.lma)
+                createChart(result, full_name)
+            }
+            else console.log("not found")
         }
     )
 
     $('.repohead h1').after(div)
-    $('#sideDiv').text("<")
+    $(div).text("←")
     $(div).after(vid)
     return true
 }
