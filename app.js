@@ -1,16 +1,3 @@
-var _gaq = _gaq || []
-_gaq.push(['_setAccount', 'UA-129010212-1'])
-_gaq.push(['_trackPageview']);
-
-(function () {
-    var ga = document.createElement('script')
-    ga.type = 'text/javascript'
-    ga.async = true
-    ga.src = 'https://ssl.google-analytics.com/ga.js'
-    var s = document.getElementsByTagName('script')[0]
-    s.parentNode.insertBefore(ga, s)
-})()
-
 // create element
 const div = document.createElement('div')
 const vid = document.createElement('div')
@@ -50,15 +37,14 @@ contentView.addClass("contentView")
 firebase.initializeApp(firebaseConfig)
 
 // events
-openButton.click((e) => {
+openButton.click(() => {
+
     if (contentView.is(":visible")) {
         arrowContainer.html(leftArrow)
         contentView.css("display", "none")
         openButton.css("right", "0")
     }
     else {
-        console.log(_gaq, e)
-        _gaq.push(['_trackEvent', e.target.id, 'clicked'])
         arrowContainer.html(rightArrow)
         openButton.css("right", "300px")
         contentView.css("display", "flex")
@@ -132,28 +118,41 @@ function createChart(result) {
     })
 }
 
+let received = false
+
 function handleMessage(request, sender, sendResponse) {
     const {full_name} = request
     const owner = full_name.split("/")[0]
     const name = full_name.split("/")[1]
 
+    openButton.click(e => {
+        sendResponse(full_name)
+    })
+
     firebase.database().ref("/projects").once("value").then((res) => {
             const projectOwner = res.val()[`${owner}`]
+        // console.log(projectOwner)
             if (projectOwner) {
                 const result = (projectOwner[`${name}`])
                 if (result) {
                     setArrowBackground(result.lma)
                     setContentTitle(full_name)
-                    if (result.lma > 0)
+                    if (result.lma > 0){
+                        received = true
                         createChart(result.lma)
-                    else
+                    }
+                    else if(result.lma < 0) {
                         contentView.append("<p>Seems to be unmaintained...</p>")
+                        received = true
+                    }
                 }
-                else {
+                else if(!result) {
+                    received = true
                     setProjectAsNotAnalyzed()
                 }
             }
-            else {
+            else if(!projectOwner) {
+                received = true
                 setProjectAsNotAnalyzed()
             }
         }

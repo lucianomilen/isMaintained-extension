@@ -1,13 +1,13 @@
 {
-    "name": "RepoHealth",
-    "version": "1.0",
-    "description": "First try!",
-    "manifest_version": 2,
-    "permissions": ["declarativeContent", "tabs", "https://github.com/*"],
- 	"background": {
-    	  "scripts": ["background.js"],
-      	"persistent": false
-    },
+  "name": "RepoHealth",
+  "version": "1.0",
+  "description": "First try!",
+  "manifest_version": 2,
+  "permissions": ["declarativeContent", "tabs", "https://github.com/*"],
+  "background": {
+        "scripts": ["background.js"],
+      "persistent": false
+  },
   "content_scripts": [
     {
       "matches": ["https://github.com/*"],
@@ -19,8 +19,8 @@
       "images/left-chevron.svg",
       "images/right-chevron.svg"
   ],
-    "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
-    "page_action": {
+  "content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'",
+  "page_action": {
       "default_icon": {
         "16": "images/get_started16.png",
         "32": "images/get_started32.png",
