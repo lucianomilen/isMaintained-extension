@@ -1,12 +1,15 @@
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-129010212-1']);
+var _gaq = _gaq || []
+_gaq.push(['_setAccount', 'UA-129010212-1'])
 _gaq.push(['_trackPageview']);
 
-(function() {
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = 'https://ssl.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
+(function () {
+    var ga = document.createElement('script')
+    ga.type = 'text/javascript'
+    ga.async = true
+    ga.src = 'https://ssl.google-analytics.com/ga.js'
+    var s = document.getElementsByTagName('script')[0]
+    s.parentNode.insertBefore(ga, s)
+})()
 
 // create element
 const div = document.createElement('div')
@@ -54,8 +57,8 @@ openButton.click((e) => {
         openButton.css("right", "0")
     }
     else {
-        console.log(_gaq, e);
-        _gaq.push(['_trackEvent', e.target.id, 'clicked']);
+        console.log(_gaq, e)
+        _gaq.push(['_trackEvent', e.target.id, 'clicked'])
         arrowContainer.html(rightArrow)
         openButton.css("right", "300px")
         contentView.css("display", "flex")
@@ -65,13 +68,13 @@ openButton.click((e) => {
 
 // functions
 function setArrowBackground(value) {
-    if(value < 0) {
+    if (value < 0) {
         openButton.css("background-color", "#bf3500")
     }
-    else if(value < 25) {
+    else if (value < 25) {
         openButton.css("background-color", lowLMAColor)
     }
-    else if(value < 75) {
+    else if (value < 75) {
         openButton.css("background-color", mediumLMAColor)
     }
     else {
@@ -84,6 +87,11 @@ function setContentTitle(repName) {
     $(title).addClass("gaugeTitle")
     $(title).text(repName)
     contentView.append(title)
+}
+
+function setProjectAsNotAnalyzed() {
+    openButton.addClass("openButtonGray")
+    contentView.append("<p>This project hasn't been analysed yet...</p>")
 }
 
 
@@ -132,18 +140,21 @@ function handleMessage(request, sender, sendResponse) {
     firebase.database().ref("/projects").once("value").then((res) => {
             const projectOwner = res.val()[`${owner}`]
             if (projectOwner) {
-                const result = (projectOwner[`${name}`]).lma
-                setArrowBackground(result)
-                setContentTitle(full_name)
-                if(result > 0)
-                    createChart(result)
-                else 
-                    contentView.append("<p>Seems to be unmaintained...</p>")
-                
+                const result = (projectOwner[`${name}`])
+                if (result) {
+                    setArrowBackground(result.lma)
+                    setContentTitle(full_name)
+                    if (result.lma > 0)
+                        createChart(result.lma)
+                    else
+                        contentView.append("<p>Seems to be unmaintained...</p>")
+                }
+                else {
+                    setProjectAsNotAnalyzed()
+                }
             }
             else {
-                openButton.addClass("openButtonGray")
-                contentView.append("<p>This project hasn't been analysed yet...</p>")
+                setProjectAsNotAnalyzed()
             }
         }
     )

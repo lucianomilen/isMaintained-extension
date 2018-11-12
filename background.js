@@ -40,11 +40,10 @@ function getRepositoryInfo(repository) {
 }
 
 function handleUpdated(tabId, changeInfo, tabInfo) {
-    if (tabInfo.status === "complete" && tabInfo.url.match("https://github.com/*")) {
+    if (tabInfo.status === "complete" && tabInfo.url.match(`github\.com\/[a-z]+\/[a-z]+`)) {
         const url = tabInfo.url.split('/');
         const repository = `${url[3]}/${url[4]}`
         getRepositoryInfo(repository).then(result => {
-            console.log(result)
             chrome.tabs.sendMessage(tabId, result);
         })
     }
