@@ -1,7 +1,7 @@
 {
-  "name": "RepoHealth",
-  "version": "1.0",
-  "description": "First try!",
+  "name": "isMaintained",
+  "version": "0.0.0.1",
+  "description": "This extension provides an detail view of the maintenance level of GitHub projects. See https://arxiv.org/abs/1809.04041 for more.",
   "manifest_version": 2,
   "permissions": ["declarativeContent", "tabs", "https://github.com/*"],
   "background": {
