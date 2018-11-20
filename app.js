@@ -68,10 +68,10 @@ function setArrowBackground(value) {
     }
 }
 
-function setContentTitle(repName) {
+function setContentTitle() {
     const title = document.createElement('p')
     $(title).addClass("gaugeTitle")
-    $(title).text(repName)
+    $(title).text("Maintenance Activity")
     contentView.append(title)
 }
 
@@ -80,13 +80,16 @@ function setProjectAsNotAnalyzed() {
     contentView.html("<p>This project hasn't been analysed yet...</p>")
 }
 
+function setProjectAsUnmaintained() {
+    contentView.html("<p>Seems to be unmaintained...</p>")
+}
+
 
 function createChart(result) {
     let chartContainer = document.createElement("div")
     chartContainer.id = "gauge"
     $(chartContainer).addClass("chartContainer")
     contentView.append(chartContainer)
-
     const g = new JustGage({
         id: "gauge",
         value: result,
@@ -94,7 +97,7 @@ function createChart(result) {
         max: 100,
         width: 300,
         height: 200,
-        label: "Maintenance Activity",
+        label: "Overall Score",
         labelMinFontSize: 14,
         labelFontColor: "#000",
         decimals: 1,
@@ -118,12 +121,11 @@ function createChart(result) {
     })
 }
 
-let received = false
-
 function handleMessage(request, sender, sendResponse) {
     const {full_name} = request
     const owner = full_name.split("/")[0]
     const name = full_name.split("/")[1]
+    setContentTitle()
 
     openButton.click(e => {
         sendResponse(full_name)
@@ -131,37 +133,29 @@ function handleMessage(request, sender, sendResponse) {
 
     firebase.database().ref("/projects").once("value").then((res) => {
             const projectOwner = res.val()[`${owner}`]
-        // console.log(projectOwner)
             if (projectOwner) {
                 const result = (projectOwner[`${name}`])
                 if (result) {
-                    setArrowBackground(result.lma)
-                    setContentTitle(full_name)
-                    if (result.lma > 0){
-                        received = true
-                        createChart(result.lma)
+                        setArrowBackground(result.lma)
+                        if(result.lma >= 0) 
+                            createChart(result.lma)
+                        else
+                            setProjectAsUnmaintained()
                     }
-                    else if(result.lma < 0) {
-                        contentView.html("<p>Seems to be unmaintained...</p>")
-                        received = true
-                    }
-                }
-                else if(!result) {
-                    received = true
+                else {
                     setProjectAsNotAnalyzed()
                 }
             }
-            else if(!projectOwner) {
-                received = true
+            else {
                 setProjectAsNotAnalyzed()
             }
         }
     )
 
-    $('.repohead h1').after(div)
+    $('.repohead h1').after(openButton)
     openButton.append(arrowContainer)
     arrowContainer.html(leftArrow)
-    openButton.after(vid)
+    openButton.after(contentView)
     return true
 }
 
