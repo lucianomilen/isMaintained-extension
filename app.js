@@ -77,7 +77,7 @@ function setContentTitle(repName) {
 
 function setProjectAsNotAnalyzed() {
     openButton.addClass("openButtonGray")
-    contentView.append("<p>This project hasn't been analysed yet...</p>")
+    contentView.html("<p>This project hasn't been analysed yet...</p>")
 }
 
 
@@ -142,7 +142,7 @@ function handleMessage(request, sender, sendResponse) {
                         createChart(result.lma)
                     }
                     else if(result.lma < 0) {
-                        contentView.append("<p>Seems to be unmaintained...</p>")
+                        contentView.html("<p>Seems to be unmaintained...</p>")
                         received = true
                     }
                 }
