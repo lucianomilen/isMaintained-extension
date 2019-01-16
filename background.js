@@ -28,22 +28,6 @@ chrome.runtime.onInstalled.addListener(() => {
     });
 });
 
-
-function ensureSendMessage(tabId, message, callback) {
-    chrome.tabs.sendMessage(tabId, message, function (response) {
-        if (response) {
-            chrome.tabs.sendMessage(tabId, message, callback);
-        } else {
-            chrome.tabs.executeScript(tabId, {file: "jquery-3.3.1.min.js"}, function () {
-                chrome.tabs.executeScript(tabId, {file: "app.js"}, function () {
-                    chrome.tabs.sendMessage(tabId, message, callback);
-                });
-            });
-        }
-    });
-}
-
-
 function getRepositoryInfo(repository) {
     return window.fetch(`https://api.github.com/repos/${repository}`)
         .then(result => result.json())

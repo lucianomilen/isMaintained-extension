@@ -69,6 +69,7 @@
 
 .score{
     font-size: 20px;
+    font-weight: bold;
 }
 
 .Borderline{
@@ -76,7 +77,7 @@
 }
 
 .Fair{
-    color: yellow;
+    color: #ffe500;
 }
 
 .High{
