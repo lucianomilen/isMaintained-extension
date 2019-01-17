@@ -91,20 +91,20 @@ function setProjectAsNotAnalyzed() {
 function setProjectStatus(flag) {
     switch (flag) {
         case -1:
-          contentLevel.html(`<p>It seems to be unmaintained.</p>`)
+          contentLevel.html(`<p>This project seems to be unmaintained.</p>`)
           openButton.css(`background-color`, unmaintainedColor)
 
           break
         case -2:
-          contentLevel.html(`<p>It does not use GitHub for issues.</p>`)
+          contentLevel.html(`<p>This project does not use GitHub for issues.</p>`)
           openButton.css(`background-color`, unverifiedColor)
           break
         case -3:
-          contentLevel.html(`<p>It is a mirror.</p>`)
+          contentLevel.html(`<p>This project is a mirror.</p>`)
           openButton.css(`background-color`, unverifiedColor)
           break
         case -4:
-          contentLevel.html(`<p>It only contains documentation.</p>`)
+          contentLevel.html(`<p>This project contains only documentation.</p>`)
           openButton.css(`background-color`, unverifiedColor)
           break
     }
