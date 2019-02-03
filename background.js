@@ -50,20 +50,13 @@ function getMaintenanceLevel(fullName) {
   })
 }
 
-function getRepositoryInfo(repository) {
-  return window.fetch(`https://api.github.com/repos/${repository}`)
-  .then(result => result.json())
-}
-
 function handleUpdated(tabId, changeInfo, tabInfo) {
   if (changeInfo.status === "complete" && tabInfo.url.match(`github\.com\/[^\n\r\/]+\/[^\n\r\/]+`)) {
     const url = tabInfo.url.split('/');
-    const repository = `${url[3]}/${url[4]}`
-    getRepositoryInfo(repository).then(({ full_name }) => {
-      getMaintenanceLevel(full_name).then(result => {
+    const repositoryFullName = `${url[3]}/${url[4]}`
+      getMaintenanceLevel(repositoryFullName).then(result => {
         chrome.tabs.sendMessage(tabId, { maintenanceInfo: result })
       })
-    })
   }
 }
 

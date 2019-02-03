@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "This extension provides an detail view of the maintenance level of GitHub projects. See https://arxiv.org/abs/1809.04041 for more.",
   "manifest_version": 2,
-  "permissions": ["tabs", "https://github.com/*", "clipboardWrite"],
+  "permissions": ["tabs", "https://github.com/*"],
   "background": {
         "scripts": ["firebase.js", "background.js"]
   },
@@ -11,7 +11,7 @@
     {
       "matches": ["https://github.com/*"],
       "css": ["style.css"],
-      "js": ["jquery-3.3.1.min.js", "raphael-2.1.4.min.js", "justgage.js", "app.js"]
+      "js": ["jquery-3.3.1.min.js", "app.js"]
     }
   ],
   "web_accessible_resources": [

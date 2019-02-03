@@ -112,9 +112,10 @@ function setLoading() {
   $(contentLevel).html(`<p>Loading...</p>`)
 }
 
+setLoading()
+
 function handleMessage({ maintenanceInfo }, sender, sendResponse) {
   setContentTitle()
-  setLoading()
 
   if (maintenanceInfo) {
     const { level, lma } = maintenanceInfo
