@@ -9,6 +9,7 @@ const contentLevelElement = document.createElement(`div`)
 const lastMergedPullDateTextElement = document.createElement(`p`)
 const lastCommitDateTextElement = document.createElement(`p`)
 const lastClosedIssueDateTextElement = document.createElement(`p`)
+const unmaintainedByOwnerTextElement = document.createElement(`p`)
 
 // set img src
 rightArrowElement.src = chrome.extension.getURL(`images/right-chevron.svg`)
@@ -25,6 +26,7 @@ const contentLevel = $(contentLevelElement)
 const lastMergedPullDateText = $(lastMergedPullDateTextElement)
 const lastCommitDateText = $(lastCommitDateTextElement)
 const lastClosedIssueDateText = $(lastClosedIssueDateTextElement)
+const unmaintainedByOwnerText = $(unmaintainedByOwnerTextElement)
 
 // constants
 const lowLMAColor = `#ff6a00`
@@ -100,26 +102,29 @@ function setProjectAsNotAnalyzed() {
         <p>This project hasn't been analysed yet...</p>`)
 }
 
-function setProjectStatus(flag) {
-    switch (flag) {
+function setProjectStatus( {lma, unmaintained_by_owner} ) {
+    switch (lma) {
         case -1:
-          contentLevel.html(`<p class="dateText">This project seems to be unmaintained.</p>`)
+          contentLevel.html(`<p class="unmaintainedText">This project seems to be unmaintained.</p>`)
           openButton.css(`background-color`, unmaintainedColor)
 
           break
         case -2:
-          contentLevel.html(`<p class="dateText">This project does not use GitHub for issues.</p>`)
+          contentLevel.html(`<p class="unmaintainedText">This project does not use GitHub for issues.</p>`)
           openButton.css(`background-color`, unverifiedColor)
           break
         case -3:
-          contentLevel.html(`<p class="dateText">This project is a mirror.</p>`)
+          contentLevel.html(`<p class="unmaintainedText">This project is a mirror.</p>`)
           openButton.css(`background-color`, unverifiedColor)
           break
         case -4:
-          contentLevel.html(`<p class="dateText">This project contains only documentation.</p>`)
+          contentLevel.html(`<p class="unmaintainedText">This project contains only documentation.</p>`)
           openButton.css(`background-color`, unverifiedColor)
           break
     }
+    contentView.append(unmaintainedByOwnerText)
+    unmaintainedByOwnerText.addClass(`dateText`)
+    unmaintainedByOwnerText.text(`Marked unmaintained by author: ${unmaintained_by_owner ? 'Yes' : 'No'}`)
 }
 
 function setScore(level) {
@@ -146,7 +151,7 @@ function handleMessage(request, sender, sendResponse) {
   const owner = full_name.split(`/`)[0]
   const name = full_name.split(`/`)[1]
   setContentTitle()
-    setLoading()
+  setLoading()
 
     openButton.click(e => {
       sendResponse(full_name)
@@ -165,7 +170,7 @@ function handleMessage(request, sender, sendResponse) {
                       setScore(result.level)
                       setArrowBackgroundByLevel(result.level)
                     } else {
-                      setProjectStatus(result.lma)
+                      setProjectStatus(result)
                     }
                     setRepoDates(result)
                 } else {
