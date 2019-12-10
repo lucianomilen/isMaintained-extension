@@ -6,6 +6,9 @@ const leftArrowElement = document.createElement(`img`)
 const rightArrowElement = document.createElement(`img`)
 const contentTitleElement = document.createElement(`div`)
 const contentLevelElement = document.createElement(`div`)
+const lastMergedPullDateTextElement = document.createElement(`p`)
+const lastCommitDateTextElement = document.createElement(`p`)
+const lastClosedIssueDateTextElement = document.createElement(`p`)
 
 // set img src
 rightArrowElement.src = chrome.extension.getURL(`images/right-chevron.svg`)
@@ -19,6 +22,9 @@ const rightArrow = $(rightArrowElement)
 const arrowContainer = $(arrowContainerElement)
 const contentTitle = $(contentTitleElement)
 const contentLevel = $(contentLevelElement)
+const lastMergedPullDateText = $(lastMergedPullDateTextElement)
+const lastCommitDateText = $(lastCommitDateTextElement)
+const lastClosedIssueDateText = $(lastClosedIssueDateTextElement)
 
 // constants
 const lowLMAColor = `#ff6a00`
@@ -41,6 +47,9 @@ openButton.addClass(`openButton`)
 contentView.addClass(`contentView`)
 contentTitle.addClass(`contentTitle`)
 contentLevel.addClass(`contentLevel`)
+lastMergedPullDateText.addClass(`dateText`)
+lastCommitDateText.addClass(`dateText`)
+lastClosedIssueDateText.addClass(`dateText`)
 
 // appends
 contentView.append(contentTitle)
