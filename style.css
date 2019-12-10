@@ -3,12 +3,12 @@
     display: none;
     align-items: center;
     justify-content: center;
-    width: 150px;
-    height: 100px;
+    width: 240px;
+    height: 160px;
     background-color: #fafbfc;
     z-index: 1000;
     right: 0;
-    top: calc(50% - 50px);
+    top: calc(50% - 80px);
     box-shadow: 0 0 1px 0px #4c4c4c;
     padding: 20px;
     box-sizing: content-box;

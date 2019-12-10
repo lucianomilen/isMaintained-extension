@@ -66,7 +66,7 @@ openButton.click(() => {
       openButton.css(`right`, `0`)
     } else {
       arrowContainer.html(rightArrow)
-      openButton.css(`right`, `190px`)
+      openButton.css(`right`, `280px`)
       contentView.css(`display`, `flex`)
       contentView.css(`flex-direction`, `column`)
     }
@@ -132,6 +132,15 @@ function setLoading() {
   $(contentLevel).html(`<p>Loading...</p>`)
 }
 
+function setRepoDates( {last_closed_issue_date, last_commit_date, last_merged_pull_date} ) {
+  contentView.append(lastCommitDateText)
+  contentView.append(lastMergedPullDateText)
+  contentView.append(lastClosedIssueDateText)
+  lastCommitDateText.text(`Last commit: ${last_commit_date}`)
+  lastMergedPullDateText.text(`Last merged pull request: ${last_merged_pull_date}`)
+  lastClosedIssueDateText.text(`Last closed issue: ${last_closed_issue_date}`)
+}
+
 function handleMessage(request, sender, sendResponse) {
   const {full_name} = request
   const owner = full_name.split(`/`)[0]
@@ -155,6 +164,7 @@ function handleMessage(request, sender, sendResponse) {
                     if (result.level) {
                       setScore(result.level)
                       setArrowBackgroundByLevel(result.level)
+                      setRepoDates(result)
                     } else setProjectStatus(result.lma)
                 } else setProjectAsNotAnalyzed()
             } else {
