@@ -54,6 +54,9 @@ lastClosedIssueDateText.addClass(`dateText`)
 // appends
 contentView.append(contentTitle)
 contentView.append(contentLevel)
+contentView.append(lastCommitDateText)
+contentView.append(lastMergedPullDateText)
+contentView.append(lastClosedIssueDateText)
 
 // firebase init
 firebase.initializeApp(firebaseConfig)
@@ -100,20 +103,20 @@ function setProjectAsNotAnalyzed() {
 function setProjectStatus(flag) {
     switch (flag) {
         case -1:
-          contentLevel.html(`<p>This project seems to be unmaintained.</p>`)
+          contentLevel.html(`<p class="dateText">This project seems to be unmaintained.</p>`)
           openButton.css(`background-color`, unmaintainedColor)
 
           break
         case -2:
-          contentLevel.html(`<p>This project does not use GitHub for issues.</p>`)
+          contentLevel.html(`<p class="dateText">This project does not use GitHub for issues.</p>`)
           openButton.css(`background-color`, unverifiedColor)
           break
         case -3:
-          contentLevel.html(`<p>This project is a mirror.</p>`)
+          contentLevel.html(`<p class="dateText">This project is a mirror.</p>`)
           openButton.css(`background-color`, unverifiedColor)
           break
         case -4:
-          contentLevel.html(`<p>This project contains only documentation.</p>`)
+          contentLevel.html(`<p class="dateText">This project contains only documentation.</p>`)
           openButton.css(`background-color`, unverifiedColor)
           break
     }
@@ -133,9 +136,6 @@ function setLoading() {
 }
 
 function setRepoDates( {last_closed_issue_date, last_commit_date, last_merged_pull_date} ) {
-  contentView.append(lastCommitDateText)
-  contentView.append(lastMergedPullDateText)
-  contentView.append(lastClosedIssueDateText)
   lastCommitDateText.text(`Last commit: ${last_commit_date}`)
   lastMergedPullDateText.text(`Last merged pull request: ${last_merged_pull_date}`)
   lastClosedIssueDateText.text(`Last closed issue: ${last_closed_issue_date}`)
@@ -164,9 +164,13 @@ function handleMessage(request, sender, sendResponse) {
                     if (result.level) {
                       setScore(result.level)
                       setArrowBackgroundByLevel(result.level)
-                      setRepoDates(result)
-                    } else setProjectStatus(result.lma)
-                } else setProjectAsNotAnalyzed()
+                    } else {
+                      setProjectStatus(result.lma)
+                    }
+                    setRepoDates(result)
+                } else {
+                  setProjectAsNotAnalyzed()
+                }
             } else {
               setProjectAsNotAnalyzed()
             }
