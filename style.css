@@ -89,3 +89,7 @@
     margin-bottom: 0;
     align-self: start;
 }
+
+.unmaintainedText {
+    margin: 25px 0 0;
+}
